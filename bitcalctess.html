@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bitloop Calculator</title>
+<link rel='stylesheet' href='../style.css'>
+<link rel='icon' type='image/x-icon' href='../favicon.ico'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'></meta>
+<style>
+	button, input {
+		background-color: #2d2b38;
+		border: none;
+		color: #ffffff
+	}
+	button {
+		cursor: pointer
+	}
+	input {
+		font-family: monospace
+	}
+	.submit:active {
+		background-color: #dddd00
+	}
+	.loading, .loading * {
+		cursor: wait
+	}
+	table {
+		border-spacing: 10px
+	}
+	.c1 {
+		width: 180px;
+	}
+	.c2 {
+		background-color: #2d2b38;
+		width: 225px;
+		max-width: 225px;
+		font-family: monospace
+	}
+	.c2i {
+		background-color: #2d2b38
+	}
+	.cp {
+		background-color: #444444;
+		max-height: 16px
+	}
+	.svg-button {
+		display: inline-block
+	}
+	.svg-button svg {
+		vertical-align: top;
+		cursor: pointer;
+		width: 20px;
+		height: 20px
+	}
+	.active {
+		display: none
+	}
+	img {
+		max-width: 100%;
+		max-height: 100%;
+	}
+</style>
+</head>
+
+<body>
+<div class='margin'>
+<a href='../bitloops.html'>&#8592;</a>
+<p id='title'>Bitloop Calculator and Tesselator</p>
+
+<br>
+<table>
+	<tr>
+		<td class='c1'>Enter a bitstring: </td>
+		<td class='c2i'><input id='bitstring' minlength='1' maxlength='28' size='28'></td>
+		<td><button class='submit' type='submit' id='submit' onclick='validate()'>Submit</button></td>
+	</tr>
+</table>
+
+<br>
+<p>Properties of the bitstring:</p>
+<table>
+	<tr>
+		<td class='c1'># of bits</td>
+		<td class='c2'><div id='bs_num_bits'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>Parity</td>
+		<td class='c2'><div id='bs_parity'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>Inverse</td>
+		<td class='c2'><div id='bs_inverse'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>Reverse</td>
+		<td class='c2'><div id='bs_reverse'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>Pattern</td>
+		<td class='c2'><div id='bs_pattern'></div></td>
+	</tr>
+</table>
+
+<br>
+<p>Properties of the bitloop to which the bitstring belongs:</p>
+<table>
+	<tr>
+		<td class='c1'>Symmetry</td>
+		<td class='c2'><div id='bl_symmetry'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>Link</td>
+		<td class='c2'><div id='bl_link'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>Sublink</td>
+		<td class='c2'><div id='bl_sublink'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>Min value rotation</td>
+		<td class='c2'><div id='bl_mvrot'></div></td>
+	</tr>
+</table>
+
+<br>
+<p>Properties of the tree to which the bitloop belongs:</p>
+<table>
+	<tr>
+		<td class='c1'>Root</td>
+		<td class='c2'><div id='tr_root'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>Structure</td>
+		<td class='c2'><div id='tr_structure'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'># of levels</td>
+		<td class='c2'><div id='tr_num_levels'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'># of bitloops</td>
+		<td class='c2'><div id='tr_num_bl'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'># of bitstrings</td>
+		<td class='c2'><div id='tr_num_bs'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>List of bitloops</td>
+		<td class='c2'><div style='overflow-x:clip' id='tr_ls_bl'></div></td>
+		<td>
+	    	<button class='cp'
+				onclick="copyText(document.getElementById('tr_ls_bl'))">
+				<div class='svg-button'>
+					<svg class='svg-default'><use xlink:href='#default'></use></svg>
+					<svg class='svg-active active'><use xlink:href='#active'></use></svg>
+				</div>
+			</button>
+		</td>
+	</tr>
+</table>
+
+<br>
+<p>Properties of the chain to which the tree belongs:</p>
+<table>
+	<tr>
+		<td class='c1'># of trees</td>
+		<td class='c2'><div id='ch_num_trees'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>List of roots</td>
+		<td class='c2'><div style='overflow-x:clip' id='ch_ls_roots'></div></td>
+		<td>
+	    	<button class='cp'
+				onclick="copyText(document.getElementById('ch_ls_roots'))">
+				<div class='svg-button'>
+					<svg class='svg-default'><use xlink:href='#default'></use></svg>
+					<svg class='svg-active active'><use xlink:href='#active'></use></svg>
+				</div>
+			</button>
+		</td>
+	</tr>
+	<tr>
+		<td class='c1'>Min value root</td>
+		<td class='c2'><div id='ch_mvroo'></div></td>
+	</tr>
+</table>
+
+<br>
+<p>Properties of the power set to which the chain belongs:</p>
+<table>
+	<tr>
+		<td class='c1'># of bitstrings</td>
+		<td class='c2'><div id='gr_num_bs'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'># of bitloops</td>
+		<td class='c2'><div id='gr_num_bl'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'># of symmetric chains</td>
+		<td class='c2'><div id='gr_num_sym_chains'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>List of symmetric chains</td>
+		<td class='c2'><div style='overflow-x:clip' id='gr_ls_sym_chains'></div></td>
+		<td>
+	    	<button class='cp'
+				onclick="copyText(document.getElementById('gr_ls_sym_chains'))">
+				<div class='svg-button'>
+					<svg class='svg-default'><use xlink:href='#default'></use></svg>
+					<svg class='svg-active active'><use xlink:href='#active'></use></svg>
+				</div>
+			</button>
+		</td>
+	</tr>
+	<tr>
+		<td class='c1'># of asymmetric chains</td>
+		<td class='c2'><div id='gr_num_asym_chains'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>List of asymmetric chains</td>
+		<td class='c2'><div style='overflow-x:clip' id='gr_ls_asym_chains'></div></td>
+		<td>
+	    	<button class='cp'
+				onclick="copyText(document.getElementById('gr_ls_asym_chains'))">
+				<div class='svg-button'>
+					<svg class='svg-default'><use xlink:href='#default'></use></svg>
+					<svg class='svg-active active'><use xlink:href='#active'></use></svg>
+				</div>
+			</button>
+		</td>
+	</tr>
+	<tr>
+		<td class='c1'># of graphs</td>
+		<td class='c2'><div id='gr_num_graphs'></div></td>
+	</tr>
+	<tr>
+		<td class='c1'>List of graphs</td>
+		<td class='c2'>
+			<div style='overflow-x:clip; white-space:nowrap' id='gr_ls_graphs'></div></td>
+		<td>
+	    	<button class='cp'
+				onclick="copyText(document.getElementById('gr_ls_graphs'))">
+				<div class='svg-button'>
+					<svg class='svg-default'><use xlink:href='#default'></use></svg>
+					<svg class='svg-active active'><use xlink:href='#active'></use></svg>
+				</div>
+			</button>
+		</td>
+	</tr>
+</table>
+
+<br>
+<p>Tessellation:</p>
+<div id='image-container'>
+	<img id='image' src='tessellator/black.gif'>
+</div>
+
+<br>
+<p><a href='https://github.com/symbolfigures/bitloops/tree/main'>Source</a></p>
+
+<br><br><br><br><br><br>
+
+</div class='margin'>
+
+<script>
+	document.getElementById('submit').addEventListener('click', function() {
+		const str = document.getElementById('bitstring').value;
+		if (validate(str)) {
+			sendGetRequest();
+			fetchImage();
+		} else {
+			alert('Input is invalid.');
+		}
+	});
+	function validate(str) {
+		const binaryRegex = /^[01]*$/;
+		return binaryRegex.test(str);
+	}
+	function sendGetRequest() {
+		var bitstring = document.getElementById('bitstring');
+		var body = document.body;
+		body.classList.add('loading');
+		var urlstub = "https://m2thy5o9ya.execute-api.us-west-2.amazonaws.com/1/";
+		var url = urlstub.concat('?bitstring=', bitstring.value);
+		fetch(url).then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok ' + response.statusText);
+			}
+			return response.json();
+		}).then(data => {
+			console.log("Response:", data);
+
+			var bs_num_bits = document.getElementById('bs_num_bits');
+			bs_num_bits.textContent = data.bs_num_bits;
+			var bs_parity = document.getElementById('bs_parity');
+			bs_parity.textContent = data.bs_parity;
+			var bs_inverse = document.getElementById('bs_inverse');
+			bs_inverse.textContent = data.bs_inverse;
+			var bs_reverse = document.getElementById('bs_reverse');
+			bs_reverse.textContent = data.bs_reverse;
+			var bs_pattern = document.getElementById('bs_pattern');
+			bs_pattern.textContent = data.bs_pattern;
+
+			var bl_symmetry = document.getElementById('bl_symmetry');
+			bl_symmetry.textContent = data.bl_symmetry;
+			var bl_link = document.getElementById('bl_link');
+			bl_link.textContent = data.bl_link;
+			var bl_sublink = document.getElementById('bl_sublink');
+			bl_sublink.textContent = data.bl_sublink;
+			var bl_mvrot = document.getElementById('bl_mvrot');
+			bl_mvrot.textContent = data.bl_mvrot;
+
+			var tr_root = document.getElementById('tr_root');
+			tr_root.textContent = data.tr_root;
+			var tr_structure = document.getElementById('tr_structure');
+			tr_structure.textContent = data.tr_structure;
+			var tr_num_levels = document.getElementById('tr_num_levels');
+			tr_num_levels.textContent = data.tr_num_levels;
+			var tr_num_bl = document.getElementById('tr_num_bl');
+			tr_num_bl.textContent = data.tr_num_bl;
+			var tr_num_bs = document.getElementById('tr_num_bs');
+			tr_num_bs.textContent = data.tr_num_bs;
+			var tr_ls_bl = document.getElementById('tr_ls_bl');
+			tr_ls_bl.textContent = data.tr_ls_bl;
+
+			var ch_num_trees = document.getElementById('ch_num_trees');
+			ch_num_trees.textContent = data.ch_num_trees;
+			var ch_ls_roots = document.getElementById('ch_ls_roots');
+			ch_ls_roots.textContent = data.ch_ls_roots;
+			var ch_mvroo = document.getElementById('ch_mvroo');
+			ch_mvroo.textContent = data.ch_mvroo;
+
+			var gr_num_bs = document.getElementById('gr_num_bs');
+			gr_num_bs.textContent = data.gr_num_bs;
+			var gr_num_bl = document.getElementById('gr_num_bl');
+			gr_num_bl.textContent = data.gr_num_bl;
+			var gr_num_sym_chains = document.getElementById('gr_num_sym_chains');
+			gr_num_sym_chains.textContent = data.gr_num_sym_chains;
+			var gr_ls_sym_chains = document.getElementById('gr_ls_sym_chains');
+			gr_ls_sym_chains.textContent = data.gr_ls_sym_chains;
+			var gr_num_asym_chains = document.getElementById('gr_num_asym_chains');
+			gr_num_asym_chains.textContent = data.gr_num_asym_chains;
+			var gr_ls_asym_chains = document.getElementById('gr_ls_asym_chains');
+			gr_ls_asym_chains.textContent = data.gr_ls_asym_chains;
+			var gr_num_graphs = document.getElementById('gr_num_graphs');
+			gr_num_graphs.textContent = data.gr_num_graphs;
+			var gr_ls_graphs = document.getElementById('gr_ls_graphs');
+			gr_ls_graphs.textContent = data.gr_ls_graphs;
+
+		}).catch(error => {
+			console.error("There was a problem with the fetch operation:", error);
+			document.getElementById('response').innerText = "Error: " + error.message;
+		}).finally(() => {
+			body.classList.remove('loading');
+		});
+	}
+	async function fetchImage() {
+		var bitstring = document.getElementById('bitstring');
+		var body = document.body;
+		body.classList.add('loading');
+		var apiUrl = 'https://7hbga5ro71.execute-api.us-west-2.amazonaws.com/1/';
+		apiUrl = apiUrl.concat('?bitstring=', bitstring.value);
+		try {
+			const response = await fetch(apiUrl);
+			console.log(response);
+			if (!response.ok) {
+				console.error('Failed to fetch image:', response.statusText);
+			}
+			const base64data = await response.text();
+			console.log(base64data);
+			document.getElementById('image').src = 'data:image/gif;base64,' + base64data;
+		} catch (error) {
+			console.error('Error fetching image:', error);
+		} finally {
+			body.classList.remove('loading');
+		}
+	}
+</script>
+
+<script>
+	function copyText(element) {
+		var valueToCopy = element.textContent;
+		navigator.clipboard.writeText(valueToCopy);
+	}
+</script>
+
+<script>
+	document.querySelectorAll('.svg-button').forEach(button => {
+		button.addEventListener('mousedown', function() {
+			button.querySelector('.svg-default').classList.add('active');
+			button.querySelector('.svg-active').classList.remove('active');
+		});
+		button.addEventListener('mouseup', function() {
+			button.querySelector('.svg-default').classList.remove('active');
+			button.querySelector('.svg-active').classList.add('active');
+		});
+		button.addEventListener('mouseleave', function() {
+			button.querySelector('.svg-default').classList.remove('active');
+			button.querySelector('.svg-active').classList.add('active');
+		});
+	});
+</script>
+
+<svg width='18' height='18' xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<symbol id='default'>
+			<rect x='0' y='0' width='18' height='18' fill='#444444'/>
+			<rect x='1' y='1' width='12' height='12' stroke='#2d2b38' stroke-width='2' fill='#666666'/>
+			<rect x='5' y='5' width='12' height='12' stroke='#2d2b38' stroke-width='2' fill='#666666'/>
+		</symbol>
+		<symbol id='active'>
+			<rect x='0' y='0' width='18' height='18' fill='#444444'/>
+			<rect x='1' y='1' width='12' height='12' stroke='#2d2b38' stroke-width='2' fill='#dddd00'/>
+			<rect x='5' y='5' width='12' height='12' stroke='#2d2b38' stroke-width='2' fill='#dddd00'/>
+		</symbol>
+	</defs>
+</svg>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
