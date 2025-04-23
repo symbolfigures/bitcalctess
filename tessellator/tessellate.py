@@ -5,7 +5,7 @@ def create_image(long_bs):
 	width, height = 1000, 1000
 	image = Image.new('RGB', (width, height), color='#000000')
 	draw = ImageDraw.Draw(image)
-	font = ImageFont.truetype('../data/american-typewriter.ttf', 24)
+	font = ImageFont.truetype('american-typewriter.ttf', 24)
 
 	global long_n
 	long_n = len(long_bs)
