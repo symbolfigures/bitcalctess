@@ -332,16 +332,8 @@ ArrayList* chains(int n) {
 		// skip element if it has already been checked
 		// this needs to index by decimal value of piomvr_i
 		if (getBit(psCheckbox, bsToDec(n, getArray(psmvr, i)))) {
-			//printf("x_%d\n", i);
 			continue;
 		}
-		/*if (i == 4) {
-			printf("i: %d\n", i);
-			printf("  psmvr_i: ");
-			printArray(n, getArray(psmvr, i));
-			printf("  bsToDec: %d\n", bsToDec(n, getArray(psmvr, i)));
-			printf("  getBit: %d\n", getBit(psCheckbox, bsToDec(n, getArray(psmvr, i))));
-		}*/
 		// identify respective chain, add to chs
 		int cycleOrder;
 		unsigned char* ch = chain(n, getArray(psmvr, i), &cycleOrder);
@@ -354,13 +346,6 @@ ArrayList* chains(int n) {
 			// that is the decimal value of the chain node's MVR
 			// psmvr and treeNodes store only MVRs, so they may be compared
 			int k = bsToDec(n, getArray(chNodes, j));
-			/*if (k == 7) {
-				printf("i: %d\n", i);
-				printf("  when k = 7, j = %d\n", j);
-				printf("  chNodes_24: ");
-				printArray(n, getArray(chNodes, j));
-			}
-			if (k == 7) printf("  before set: %d, i: %d\n", getBit(psCheckbox, k), i);*/
 			setBit(psCheckbox, k);
 			//if (k == 7) printf("  after set: %d, i: %d\n", getBit(psCheckbox, k), i);
 		}
