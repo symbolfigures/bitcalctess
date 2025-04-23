@@ -1,6 +1,6 @@
 # Bitloop Calculator (Java)
 
-Requires JDK
+Requires JDK.
 
 Compile
 `javac I.java`
