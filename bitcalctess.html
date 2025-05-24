@@ -70,7 +70,7 @@
 <table>
 	<tr>
 		<td class='c1'>Enter a bitstring: </td>
-		<td class='c2i'><input id='bitstring' minlength='1' maxlength='28' size='28'></td>
+		<td class='c2i'><input id='bitstring' minlength='1' maxlength='64' size='28'></td>
 		<td><button class='submit' type='submit' id='submit' onclick='validate()'>Submit</button></td>
 	</tr>
 </table>
@@ -88,15 +88,15 @@
 	</tr>
 	<tr>
 		<td class='c1'>Inverse</td>
-		<td class='c2'><div id='bs_inverse'></div></td>
+		<td class='c2'><div style='overflow-x:clip' id='bs_inverse'></div></td>
 	</tr>
 	<tr>
 		<td class='c1'>Reverse</td>
-		<td class='c2'><div id='bs_reverse'></div></td>
+		<td class='c2'><div style='overflow-x:clip' id='bs_reverse'></div></td>
 	</tr>
 	<tr>
 		<td class='c1'>Pattern</td>
-		<td class='c2'><div id='bs_pattern'></div></td>
+		<td class='c2'><div style='overflow-x:clip' id='bs_pattern'></div></td>
 	</tr>
 </table>
 
@@ -109,15 +109,15 @@
 	</tr>
 	<tr>
 		<td class='c1'>Link</td>
-		<td class='c2'><div id='bl_link'></div></td>
+		<td class='c2'><div style='overflow-x:clip' id='bl_link'></div></td>
 	</tr>
 	<tr>
 		<td class='c1'>Sublink</td>
-		<td class='c2'><div id='bl_sublink'></div></td>
+		<td class='c2'><div style='overflow-x:clip' id='bl_sublink'></div></td>
 	</tr>
 	<tr>
 		<td class='c1'>Min value rotation</td>
-		<td class='c2'><div id='bl_mvrot'></div></td>
+		<td class='c2'><div style='overflow-x:clip' id='bl_mvrot'></div></td>
 	</tr>
 </table>
 
@@ -126,7 +126,7 @@
 <table>
 	<tr>
 		<td class='c1'>Root</td>
-		<td class='c2'><div id='tr_root'></div></td>
+		<td class='c2'><div style='overflow-x:clip' id='tr_root'></div></td>
 	</tr>
 	<tr>
 		<td class='c1'>Structure</td>
@@ -181,7 +181,7 @@
 	</tr>
 	<tr>
 		<td class='c1'>Min value root</td>
-		<td class='c2'><div id='ch_mvroo'></div></td>
+		<td class='c2'><div style='overflow-x:clip' id='ch_mvroo'></div></td>
 	</tr>
 </table>
 
@@ -270,7 +270,7 @@
 			sendGetRequest();
 			fetchImage();
 		} else {
-			alert('Input is invalid.');
+			alert('Enter up to 64 ones and zeros.');
 		}
 	});
 	function validate(str) {
@@ -281,7 +281,7 @@
 		var bitstring = document.getElementById('bitstring');
 		var body = document.body;
 		body.classList.add('loading');
-		var urlstub = "https://m2thy5o9ya.execute-api.us-west-2.amazonaws.com/1/";
+		var urlstub = "https://cqsktkpt4l.execute-api.us-west-2.amazonaws.com/1/calc/";
 		var url = urlstub.concat('?bitstring=', bitstring.value);
 		fetch(url).then(response => {
 			if (!response.ok) {
@@ -359,7 +359,7 @@
 		var bitstring = document.getElementById('bitstring');
 		var body = document.body;
 		body.classList.add('loading');
-		var apiUrl = 'https://7hbga5ro71.execute-api.us-west-2.amazonaws.com/1/';
+		var apiUrl = 'https://cqsktkpt4l.execute-api.us-west-2.amazonaws.com/1/tess/';
 		apiUrl = apiUrl.concat('?bitstring=', bitstring.value);
 		try {
 			const response = await fetch(apiUrl);
