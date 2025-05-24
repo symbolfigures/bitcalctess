@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Bitloop Calculator</title>
+<title>Bitloop Calc & Tess</title>
 <link rel='stylesheet' href='../style.css'>
 <link rel='icon' type='image/x-icon' href='../favicon.ico'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'></meta>
@@ -287,7 +287,6 @@
 		const startTime = Date.now();
 		var bitstring = document.getElementById('bitstring');
 		var body = document.body;
-		body.classList.add('loading');
 		var urlstub = "https://cqsktkpt4l.execute-api.us-west-2.amazonaws.com/1/calc/";
 		var url = urlstub.concat('?bitstring=', bitstring.value);
 
@@ -358,23 +357,21 @@
 
 		} catch (error) {
 			console.error('Calculation network error:', error);
-			if (Date.now() - startTime > 25000) {
+			if (Date.now() - startTime > 29000) {
 				alert('Timeout. This is more likely to occur if the number of bits has a large (>30) prime factor.');
 			} else {
 				alert('Unsupported browser or other error.');
 			}
-		} finally {
-			body.classList.remove('loading');
 		}
 	}
 	async function fetchTessellation() {
 		var bitstring = document.getElementById('bitstring');
 		var body = document.body;
 		body.classList.add('loading');
-		var apiUrl = 'https://cqsktkpt4l.execute-api.us-west-2.amazonaws.com/1/tess/';
-		apiUrl = apiUrl.concat('?bitstring=', bitstring.value);
+		var url = 'https://cqsktkpt4l.execute-api.us-west-2.amazonaws.com/1/tess/';
+		url = url.concat('?bitstring=', bitstring.value);
 		try {
-			const response = await fetch(apiUrl);
+			const response = await fetch(url);
 			console.log(response);
 			if (!response.ok) {
 				console.error('Tessellation response error:', response.statusText);
