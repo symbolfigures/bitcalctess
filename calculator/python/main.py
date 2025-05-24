@@ -1,5 +1,6 @@
-import calc
+from src import calc
 import json
+
 
 def get_item(json_file, n):
 	with open(json_file, 'r') as file:
@@ -7,19 +8,28 @@ def get_item(json_file, n):
 	for item in data:
 		if int(item['n']['N']) == n:
 			return {
-				'asym_chains': int(item['asym_chains']['N']),
 				'bitloops': int(item['bitloops']['N']),
 				'bitstrings': int(item['bitstrings']['N']),
-				'graphs': int(item['graphs']['N']),
-				'ls_asym_chains': item['ls_asym_chains']['S'],
-				'ls_graphs': item['ls_graphs']['S'],
+				'sym_chains': int(item['sym_chains']['N']),
 				'ls_sym_chains': item['ls_sym_chains']['S'],
-				'n': int(item['n']['N']),
-				'sym_chains': int(item['sym_chains']['N'])
+				'asym_chains': int(item['asym_chains']['N']),
+				'ls_asym_chains': item['ls_asym_chains']['S'],
+				'graphs': int(item['graphs']['N']),
+				'ls_graphs': item['ls_graphs']['S'],
 			}
+	return {
+		'bitloops': 'no data',
+		'bitstrings': 'no data',
+		'sym_chains': 'no data',
+		'ls_sym_chains': 'no data',
+		'asym_chains': 'no data',
+		'ls_asym_chains': 'no data',
+		'graphs': 'no data',
+		'ls_graphs': 'no data',
+	}
+
 
 def handler(event, context):
-	
 	query_params = event.get('queryStringParameters', {})
 	bs = query_params.get('bitstring', '')
 	#bs = event.get('bitstring', '')
@@ -49,18 +59,18 @@ def handler(event, context):
 	ch_ls_roots = calc.roots(tr_root, ch_num_trees)
 	ch_mvroo = calc.min_val_root(ch_ls_roots)
 	
-	json_file = '../data/powerset.json'
+	json_file = 'data/powerset.json'
 	item = get_item(json_file, bs_num_bits)
 	
-	gr_num_bs = int(item['bitstrings'])
-	gr_num_bl = int(item['bitloops'])
-	gr_num_sym_chains = int(item['sym_chains'])
+	gr_num_bs = item['bitstrings']
+	gr_num_bl = item['bitloops']
+	gr_num_sym_chains = item['sym_chains']
 	gr_ls_sym_chains = item['ls_sym_chains']
-	gr_num_asym_chains = int(item['asym_chains'])
+	gr_num_asym_chains = item['asym_chains']
 	gr_ls_asym_chains = item['ls_asym_chains']
 	if gr_ls_asym_chains == '':
 		gr_ls_asym_chains = 'None'
-	gr_num_graphs = int(item['graphs'])
+	gr_num_graphs = item['graphs']
 	gr_ls_graphs = item['ls_graphs']
 	
 	return {
