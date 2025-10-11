@@ -20,7 +20,7 @@
 	.submit:active {
 		background-color: #dddd00
 	}
-	.loading, .loading * {
+	.loading-c, .loading-c *, .loading-t, .loading-t * {
 		cursor: wait
 	}
 	table {
@@ -287,6 +287,7 @@
 		const startTime = Date.now();
 		var bitstring = document.getElementById('bitstring');
 		var body = document.body;
+		body.classList.add('loading-c');
 		var urlstub = "https://cqsktkpt4l.execute-api.us-west-2.amazonaws.com/1/calc/";
 		var url = urlstub.concat('?bitstring=', bitstring.value);
 
@@ -358,16 +359,18 @@
 		} catch (error) {
 			console.error('Calculation network error:', error);
 			if (Date.now() - startTime > 29000) {
-				alert('Timeout. This is more likely to occur if the number of bits has a large (>30) prime factor.');
+				alert('Timeout. This is more likely to occur if the number of bits has a large prime factor (37+).');
 			} else {
 				alert('Unsupported browser or other error.');
 			}
+		} finally {
+			body.classList.remove('loading-c');
 		}
 	}
 	async function fetchTessellation() {
 		var bitstring = document.getElementById('bitstring');
 		var body = document.body;
-		body.classList.add('loading');
+		body.classList.add('loading-t');
 		var url = 'https://cqsktkpt4l.execute-api.us-west-2.amazonaws.com/1/tess/';
 		url = url.concat('?bitstring=', bitstring.value);
 		try {
@@ -382,7 +385,7 @@
 		} catch (error) {
 			console.error('Tessellation network error:', error);
 		} finally {
-			body.classList.remove('loading');
+			body.classList.remove('loading-t');
 		}
 	}
 </script>
